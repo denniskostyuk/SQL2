@@ -9,14 +9,14 @@
 
 ### Ответ 1
 
-SELECT CONCAT(s2.first_name, ' ', s2.last_name) as ФИО, c3.city as Город, COUNT(c.customer_id) as "Кол-во клиентов"
-FROM customer c
-JOIN store s on c.store_id = s.store_id
-JOIN staff s2 on s2.staff_id = s.manager_staff_id
-JOIN address a on a.address_id = s.address_id
-JOIN city c3 on c3.city_id = a.city_id
-GROUP BY c.store_id
-HAVING COUNT(c.customer_id) > 300;
+SELECT CONCAT(s2.first_name, ' ', s2.last_name) as ФИО, c3.city as Город, COUNT(c.customer_id) as "Кол-во клиентов"  
+FROM customer c  
+JOIN store s on c.store_id = s.store_id  
+JOIN staff s2 on s2.staff_id = s.manager_staff_id  
+JOIN address a on a.address_id = s.address_id  
+JOIN city c3 on c3.city_id = a.city_id  
+GROUP BY c.store_id  
+HAVING COUNT(c.customer_id) > 300;  
 
 
 ## Задание 2
