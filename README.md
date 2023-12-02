@@ -24,10 +24,24 @@ HAVING COUNT(c.customer_id) > 300;
 
 ### Ответ 2
 
+SELECT COUNT(f.`length`) as "кол-во длинных фильмов" 
+FROM film f 
+WHERE  f.`length` > (SELECT SUM(f2.`length`) / COUNT(f2.`length`) from film f2);
+
 ## Задание 3
 Получите информацию, за какой месяц была получена наибольшая сумма платежей, и добавьте информацию по количеству аренд за этот месяц.
 
 ### Ответ 3
+
+SELECT MONTH (p.payment_date) as mesyac, SUM(p.amount) as summa, (
+	SELECT COUNT(r.rental_id) 
+	from rental r 
+	WHERE MONTH(r.rental_date)=mesyac
+) as prodaji
+FROM payment p 
+GROUP BY MONTH(payment_date)
+ORDER BY SUM(p.amount) DESC
+LIMIT 1;
 
 ## Дополнительные задания (со звёздочкой*)
 Эти задания дополнительные, то есть не обязательные к выполнению, и никак не повлияют на получение вами зачёта по этому домашнему заданию. Вы можете их выполнить, если хотите глубже шире разобраться в материале.
@@ -37,7 +51,23 @@ HAVING COUNT(c.customer_id) > 300;
 
 ### Ответ 4
 
+SELECT CONCAT(s.first_name, ' ', s.last_name) as "Продаван", COUNT(p.payment_id) as "Продажи",
+	CASE
+		WHEN COUNT(p.payment_id) > 8000 THEN 'Да'
+		WHEN COUNT(p.payment_id) < 8000 THEN 'Нет'
+	ELSE 'Average user'
+	END AS "Премия"
+FROM payment p 
+RIGHT JOIN staff s on s.staff_id = p.staff_id 
+GROUP BY s.staff_id;
+
 ## Задание 5*
 Найдите фильмы, которые ни разу не брали в аренду.
 
 ### Ответ 5
+
+SELECT *
+FROM film f 
+LEFT JOIN inventory i on i.film_id = f.film_id 
+LEFT JOIN rental r on r.inventory_id = i.inventory_id 
+WHERE r.rental_id is NULL;
